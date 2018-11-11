@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 def load_image(image_path):
     img = tf.read_file(image_path)

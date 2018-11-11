@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pickle
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class Tokenisations(object):
     def __init__(self, load_tokens=False):

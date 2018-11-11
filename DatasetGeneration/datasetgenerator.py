@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class DatasetGenerator(object):
     def __init__(self, img_name_train, cap_train, batch_size=16, buffer_size=1000, num_parallel_calls=8):

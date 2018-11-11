@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 import time
 import numpy as np
@@ -9,6 +9,7 @@ import os
 from Models.rnndecoder import RNN_Decoder
 from Models.cnnencoder import CNN_Encoder
 from Models.Helpers.helper import load_image
+from tqdm import tqdm
 
 class AttentionModel(object):
     def __init__(self, tokenisation, embedding_dim, units, vocab_size, batch_size, attention_features_shape, image_features_extract_model):
@@ -38,7 +39,8 @@ class AttentionModel(object):
         for epoch in range(epochs):
             start = time.time()
             total_loss = 0
-            for (batch, (img_tensor, target)) in enumerate(dataset):
+            pbar = tqdm(enumerate(dataset))
+            for (batch, (img_tensor, target)) in pbar:
                 loss = 0
 
                 # initializing the hidden state for each batch
@@ -46,7 +48,7 @@ class AttentionModel(object):
                 hidden = self.decoder.reset_state(batch_size=target.shape[0])
 
                 dec_input = tf.expand_dims([self.tokenizer.word_index['<start>']] * self.batch_size, 1)
-
+                
                 with tf.GradientTape() as tape:
                     features = self.encoder(img_tensor)
 
@@ -60,6 +62,8 @@ class AttentionModel(object):
                         dec_input = tf.expand_dims(target[:, i], 1)
 
                 total_loss += (loss / int(target.shape[1]))
+                pbar.set_description("Processing "+ str(batch) + ": "+ str(loss))
+
 
                 variables = self.encoder.variables + self.decoder.variables
 
@@ -67,7 +71,7 @@ class AttentionModel(object):
 
                 self.optimizer.apply_gradients(zip(gradients, variables), tf.train.get_or_create_global_step())
 
-                if batch % 100 == 0:
+                if batch % 20 == 0:
                     print ('Epoch {} Batch {} Loss {:.4f}'.format(epoch + 1, 
                                                                   batch, 
                                                                   loss.numpy() / 
@@ -94,7 +98,7 @@ class AttentionModel(object):
 
         dec_input = tf.expand_dims([self.tokenizer.word_index['<start>']], 0)
         result = []
-
+        
         for i in range(self.tokenisation.max_length):
             predictions, hidden, attention_weights = self.decoder(dec_input, features, hidden)
 

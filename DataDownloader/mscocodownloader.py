@@ -3,7 +3,7 @@ import json
 import os
 from sklearn.utils import shuffle
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class MSCocoDownloader(object):
     def __init__(self, sample_count = None):

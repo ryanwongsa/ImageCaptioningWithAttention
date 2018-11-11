@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class CNN_Encoder(tf.keras.Model):
     # Since we have already extracted the features and dumped it using pickle

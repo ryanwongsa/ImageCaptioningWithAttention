@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class BahdanauAttention(tf.keras.Model):
     def __init__(self, units):

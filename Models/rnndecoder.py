@@ -2,7 +2,7 @@ import tensorflow as tf
 from Models.bahdanauattention import BahdanauAttention
 from Models.Helpers.helper import gru
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class RNN_Decoder(tf.keras.Model):
     def __init__(self, embedding_dim, units, vocab_size):

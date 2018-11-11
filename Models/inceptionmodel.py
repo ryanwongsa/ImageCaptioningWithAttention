@@ -2,7 +2,7 @@ import tensorflow as tf
 from Models.Helpers.helper import load_image
 from tqdm import tqdm
 import numpy as np
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 class InceptionModel(object):
     def __init__(self):
