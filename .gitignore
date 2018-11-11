@@ -1,0 +1,7 @@
+captions.zip
+train2014/
+annotations/
+train2014.zip
+.ipynb_checkpoints/
+*.pyc
+__pycache__/
