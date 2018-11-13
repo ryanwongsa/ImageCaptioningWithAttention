@@ -5,9 +5,9 @@ import pickle
 # tf.enable_eager_execution()
 
 class Tokenisations(object):
-    def __init__(self, load_tokens=False):
-        self.token_file = "tokenizer.pkl"
-        self.token_dict = "token_dict.npy"
+    def __init__(self, load_tokens=False, token_file = "Configs/tokenizer.pkl", token_dict = "Configs/token_dict.npy"):
+        self.token_file = token_file
+        self.token_dict = token_dict
         self.tokenizer = None
         if load_tokens==True:
             with open(self.token_file, 'rb') as input:
@@ -46,4 +46,4 @@ class Tokenisations(object):
             pickle.dump(self.tokenizer, output, pickle.HIGHEST_PROTOCOL)
         
         token_dict = {'max_length':self.max_length, 'index_word':self.index_word}
-        np.save("token_dict.npy", token_dict)
+        np.save(self.token_dict, token_dict)
