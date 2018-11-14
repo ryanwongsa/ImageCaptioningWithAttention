@@ -1,8 +1,5 @@
 annotations/
 .ipynb_checkpoints/
-DataDownloader/
-DatasetGeneration/
-Models/
 train2014/
 training_checkpoints/
 Utils/
@@ -11,3 +8,4 @@ train2014.zip
 PredictionsImageCaptioningWithAttention.ipynb
 ImageCaptioningWithAttention.yml
 ImageCaptioningWithAttention.ipynb
+__pycache__
