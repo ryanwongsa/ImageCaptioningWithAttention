@@ -86,7 +86,6 @@ class AttentionModel(object):
     
             
     def evaluate(self, image):
-        print(tf.train.latest_checkpoint('training_checkpoints2'))
         with tf.contrib.eager.restore_variables_on_create(tf.train.latest_checkpoint('training_checkpoints2')):
             attention_plot = np.zeros((self.tokenisation.max_length, self.attention_features_shape))
 
@@ -117,6 +116,40 @@ class AttentionModel(object):
             attention_plot = attention_plot[:len(result), :]
             return result, attention_plot
 
+    def evaluate2(self, image):
+        with tf.contrib.eager.restore_variables_on_create(tf.train.latest_checkpoint('training_checkpoints2')):
+            attention_plot = np.zeros((self.tokenisation.max_length, self.attention_features_shape))
+
+            hidden = self.decoder.reset_state(batch_size=1)
+#             print(load_image(image)[0])
+#             temp_input = tf.expand_dims(load_image(image)[0], 0)
+            img = tf.keras.applications.inception_v3.preprocess_input(image.astype(np.float32))
+            temp_input = tf.expand_dims(img, 0)
+
+            img_tensor_val = self.image_features_extract_model(temp_input)
+            img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
+
+            features = self.encoder(img_tensor_val)
+
+            dec_input = tf.expand_dims([self.tokenizer.word_index['<start>']], 0)
+            result = []
+
+            for i in range(self.tokenisation.max_length):
+                predictions, hidden, attention_weights = self.decoder(dec_input, features, hidden)
+
+                attention_plot[i] = tf.reshape(attention_weights, (-1, )).numpy()
+
+                predicted_id = tf.multinomial(predictions, num_samples=1)[0][0].numpy()
+                result.append(self.tokenisation.index_word[predicted_id])
+
+                if self.tokenisation.index_word[predicted_id] == '<end>':
+                    return result, attention_plot
+
+                dec_input = tf.expand_dims([predicted_id], 0)
+
+            attention_plot = attention_plot[:len(result), :]
+            return result, attention_plot
+        
     def save_checkpoint(self, checkpoint_dir = './training_checkpoints'):
         self.checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
         self.checkpoint = tf.train.Checkpoint(optimizer=self.optimizer,
