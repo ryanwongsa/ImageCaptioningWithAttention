@@ -30,6 +30,7 @@ from DatasetGeneration.datasetgeneratornolabels import DatasetGeneratorNoLabels
 from DatasetGeneration.datasetgenerator import DatasetGenerator
 from Models.attentionmodel import AttentionModel
 from Models.Helpers.tokenisations import Tokenisations
+from pathlib import Path
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
@@ -47,6 +48,29 @@ inmodel = InceptionModel()
 tokenisations = Tokenisations(True, "configs/tokenizer.pkl", "configs/token_dict.npy")
 vis = Visualiser()
 attentionModel = AttentionModel(tokenisations, embedding_dim, units, len(tokenisations.tokenizer.word_index), BATCH_SIZE, attention_features_shape, inmodel.image_features_extract_model)
+
+async def download_file(url, dest): 
+    if not os.path.exists(sys.path[-1]+'/training_checkpoints3/'):
+        os.mkdir(sys.path[-1]+'/training_checkpoints3/')
+    if dest.exists():
+    	# print("Downloaded file already") 
+    	return
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            data = await response.read()
+            with open(dest, 'wb') as f: f.write(data)
+
+async def setup_download():
+    await download_file("https://www.dropbox.com/s/evkwvtko4u5l9n9/checkpoint?dl=1", Path(sys.path[-1]+'/training_checkpoints2/'+'checkpoint'))  
+    await download_file("https://www.dropbox.com/s/d6ec3mkatwqqu11/ckpt.index?dl=1", Path(sys.path[-1]+'/training_checkpoints2/'+'ckpt.index'))
+    await download_file("https://www.dropbox.com/s/nsu98bb622kkpai/ckpt.data-00000-of-00001?dl=1", Path(sys.path[-1]+'/training_checkpoints2/'+'ckpt.data-00000-of-00001'))
+
+    return None
+
+loop = asyncio.get_event_loop()
+tasks = [asyncio.ensure_future(setup_download())]
+loop.run_until_complete(asyncio.gather(*tasks))[0]
+loop.close()
 
 # vis.plot_attention(image_path, result, attention_plot)
 # opening the image

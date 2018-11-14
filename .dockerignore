@@ -2,6 +2,7 @@ annotations/
 .ipynb_checkpoints/
 train2014/
 training_checkpoints/
+training_checkpoints2/
 Utils/
 captions.zip
 train2014.zip
@@ -9,3 +10,4 @@ PredictionsImageCaptioningWithAttention.ipynb
 ImageCaptioningWithAttention.yml
 ImageCaptioningWithAttention.ipynb
 __pycache__
+app/PredictionsImageCaptioningWithAttention-Copy1.ipynb
