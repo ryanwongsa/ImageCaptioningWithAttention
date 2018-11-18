@@ -19,6 +19,8 @@ Master branch contains the main components for setting up the training process.
 ```
 conda env create -f ImageCaptioningWithAttention.yml
 conda activate ImageCaptioningWithAttention
+
+jupyter notebook
 ```
 
 Main notebook for training: `ImageCaptioningWithAttention.ipynb`
